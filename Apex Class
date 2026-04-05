@@ -1,0 +1,32 @@
+public class BillingTriggerHandler {
+
+   
+    public static void createBillingFromBooking(List<Banquet_Hall__c> banquetHallList) {
+
+        if (banquetHallList == null || banquetHallList.isEmpty()) {
+            return;
+        }
+
+        List<Billing__c> billingList = new List<Billing__c>();
+
+        for (Banquet_Hall__c hall : banquetHallList) {
+
+            Billing__c billingRecord = new Billing__c();
+
+            
+            billingRecord.Customer_Name__c = hall.Id;   // Consider using a proper lookup if needed
+            billingRecord.Email__c = hall.Email__c;
+
+            billingList.add(billingRecord);
+        }
+
+        
+        if (!billingList.isEmpty()) {
+            try {
+                insert billingList;
+            } catch (DmlException e) {
+                System.debug('Error inserting billing records: ' + e.getMessage());
+            }
+        }
+    }
+}
